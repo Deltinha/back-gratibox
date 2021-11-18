@@ -41,11 +41,11 @@ export async function getUserByEmail(email) {
     `,
     [email]
   );
-  return user.rowCount;
+  return user.rows;
 }
 
 export async function createSession(session) {
-  const { user_id: userId, token } = session;
+  const { userId, token } = session;
   await connection.query(
     `
     INSERT INTO sessions

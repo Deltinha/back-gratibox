@@ -43,7 +43,6 @@ export async function getStates() {
 }
 
 export async function insertSubscription({ body, userId }) {
-  console.log(body);
   const { deliveryDayId, address, recipient, cep, city, stateId } = body;
   const addressId = await connection.query(
     `

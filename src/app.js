@@ -13,6 +13,8 @@ app.get('/health', (req, res) => res.sendStatus(200));
 
 app.post('/register', userController.postNewUser);
 
+app.post('/login', userController.login);
+
 app.get('/plans', subscriptionController.getPlans);
 
 app.get('/plans/:planId', subscriptionController.getDaysFromPlan);
