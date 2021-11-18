@@ -10,3 +10,8 @@ export async function getDaysFromPlan(req, res) {
   const days = await subscriptionService.getDaysFromPlan(planId);
   return res.send(days).status(200);
 }
+
+export async function getProducts(req, res) {
+  const products = await subscriptionService.getProducts();
+  return res.send(products).status(200);
+}

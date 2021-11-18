@@ -9,3 +9,8 @@ export async function getDaysFromPlan(planId) {
   const days = await subscriptionRepository.getDaysFromPlan(planId);
   return days;
 }
+
+export async function getProducts() {
+  const products = await subscriptionRepository.getProducts();
+  return products;
+}
