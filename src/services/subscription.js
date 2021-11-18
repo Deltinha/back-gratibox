@@ -1,4 +1,5 @@
-import * as subscriptionRepository from '../repositories/subscriptions';
+import * as subscriptionRepository from '../repositories/subscription';
+import validateSubscriptionSyntax from '../schemas/subscriptionSchema';
 
 export async function getPlans() {
   const plans = await subscriptionRepository.getPlans();
@@ -18,4 +19,20 @@ export async function getProducts() {
 export async function getStates() {
   const states = await subscriptionRepository.getStates();
   return states;
+}
+
+export async function insertSubscription({ body, userId }) {
+  await subscriptionRepository.insertSubscription({ body, userId });
+}
+
+export async function isSubscriptionValid(body) {
+  const isSyntaxValid = validateSubscriptionSyntax(body);
+  if (!isSyntaxValid) return false;
+
+  const { deliveryDayId: dayId } = body;
+
+  const deliveryDay = await subscriptionRepository.getDayFromId(dayId);
+  if (deliveryDay.length === 0) return false;
+
+  return true;
 }

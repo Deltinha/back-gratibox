@@ -3,7 +3,6 @@ import express from 'express';
 import cors from 'cors';
 
 import * as subscriptionController from './controllers/subsctiption';
-import connection from './database/database.js';
 
 const app = express();
 app.use(cors());
@@ -13,11 +12,13 @@ app.get('/health', (req, res) => res.sendStatus(200));
 
 app.get('/plans', subscriptionController.getPlans);
 
-app.get('/days/:planId', subscriptionController.getDaysFromPlan);
+app.get('/plans/:planId', subscriptionController.getDaysFromPlan);
 
 app.get('/products', subscriptionController.getProducts);
 
 app.get('/states', subscriptionController.getStates);
+
+app.post('/subscriptions', subscriptionController.postSubscription);
 
 // eslint-disable-next-line no-unused-vars
 app.use((error, request, response, next) => {
