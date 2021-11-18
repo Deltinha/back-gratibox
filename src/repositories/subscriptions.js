@@ -23,3 +23,10 @@ export async function getProducts() {
     `);
   return products.rows;
 }
+
+export async function getStates() {
+  const states = await connection.query(`
+      SELECT * FROM states ORDER BY 2;
+    `);
+  return states.rows;
+}

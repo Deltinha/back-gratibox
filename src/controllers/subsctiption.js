@@ -15,3 +15,8 @@ export async function getProducts(req, res) {
   const products = await subscriptionService.getProducts();
   return res.send(products).status(200);
 }
+
+export async function getStates(req, res) {
+  const states = await subscriptionService.getStates();
+  return res.send(states).status(200);
+}

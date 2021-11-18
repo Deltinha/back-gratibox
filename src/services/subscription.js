@@ -14,3 +14,8 @@ export async function getProducts() {
   const products = await subscriptionRepository.getProducts();
   return products;
 }
+
+export async function getStates() {
+  const states = await subscriptionRepository.getStates();
+  return states;
+}

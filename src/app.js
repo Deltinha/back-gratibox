@@ -3,6 +3,7 @@ import express from 'express';
 import cors from 'cors';
 
 import * as subscriptionController from './controllers/subsctiption';
+import connection from './database/database.js';
 
 const app = express();
 app.use(cors());
@@ -15,6 +16,8 @@ app.get('/plans', subscriptionController.getPlans);
 app.get('/days/:planId', subscriptionController.getDaysFromPlan);
 
 app.get('/products', subscriptionController.getProducts);
+
+app.get('/states', subscriptionController.getStates);
 
 // eslint-disable-next-line no-unused-vars
 app.use((error, request, response, next) => {
