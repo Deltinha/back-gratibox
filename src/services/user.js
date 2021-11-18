@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import bcrypt from 'bcrypt';
 import { v4 as uuid } from 'uuid';
 import * as userRepository from '../repositories/user';
