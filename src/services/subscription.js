@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import * as subscriptionRepository from '../repositories/subscription';
 import validateSubscriptionSyntax from '../schemas/subscriptionSchema';
 
@@ -40,4 +41,40 @@ export async function isSubscriptionValid(body) {
   if (products.length !== productsIds.length) return false;
 
   return true;
+}
+
+export async function getNextDeliveries({ choosenPlan, choosenDay }) {
+  const nextDeliveries = [];
+  let nextDate;
+  if (choosenPlan === 'mensal') {
+    for (let i = 0; i <= 2; i += 1) {
+      if (dayjs().add(i, 'month') <= dayjs().date(choosenDay).add(i, 'month')) {
+        nextDate = dayjs().date(choosenDay).add(i, 'month');
+
+        if (nextDate.format('d') === '0') {
+          nextDate = nextDate.add(1, 'day');
+        }
+        if (nextDate.format('d') === '6') {
+          nextDate = nextDate.add(2, 'day');
+        }
+
+        nextDeliveries.push(nextDate);
+      }
+      if (dayjs().add(i, 'month') > dayjs().date(choosenDay).add(i, 'month')) {
+        nextDate = dayjs()
+          .date(choosenDay)
+          .add(i + 1, 'month');
+
+        if (nextDate.format('d') === '0') {
+          nextDate = nextDate.add(1, 'day');
+        }
+        if (nextDate.format('d') === '6') {
+          nextDate = nextDate.add(2, 'day');
+        }
+
+        nextDeliveries.push(nextDate);
+      }
+    }
+  }
+  return nextDeliveries;
 }

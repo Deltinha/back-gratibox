@@ -1,4 +1,5 @@
 import * as userService from '../services/user';
+import * as subscriptionService from '../services/subscription';
 
 export async function postNewUser(req, res) {
   const userInfo = req.body;
@@ -43,5 +44,13 @@ export async function getPlanFromUser(req, res) {
 
   const plan = await userService.getPlanFromUser(userId);
 
-  return res.send(plan).status(200);
+  const choosenPlan = plan.plan;
+  const choosenDay = plan.day;
+
+  const nextDeliveries = await subscriptionService.getNextDeliveries({
+    choosenPlan,
+    choosenDay,
+  });
+
+  return res.send({ ...plan, nextDeliveries }).status(200);
 }
