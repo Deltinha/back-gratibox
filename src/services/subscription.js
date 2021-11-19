@@ -92,3 +92,11 @@ export async function getNextDeliveries({ choosenPlan, choosenDay }) {
   }
   return nextDeliveries;
 }
+
+export async function isUserSubscribed(userId) {
+  const subscription = await subscriptionRepository.getSubscriptionFromUser(
+    userId
+  );
+  if (subscription.length === 0) return false;
+  return true;
+}

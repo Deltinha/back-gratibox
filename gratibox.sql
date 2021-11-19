@@ -70,8 +70,9 @@ CREATE TABLE "states" (
 
 CREATE TABLE "delivery_days" (
 	"id" serial NOT NULL,
-	"day" integer NOT NULL,
+	"day" integer,
 	"plan_id" integer NOT NULL,
+	"week_day" integer,
 	CONSTRAINT "delivery_days_pk" PRIMARY KEY ("id")
 ) WITH (
   OIDS=FALSE

@@ -118,3 +118,18 @@ export async function insertSubscription(body) {
     subscriptionId: subscription.rows[0].id,
   });
 }
+
+export async function getSubscriptionFromUser(userId) {
+  const subscription = await connection.query(
+    `
+    SELECT
+      *
+    FROM
+      subscriptions
+    WHERE
+      user_id = $1;
+  `,
+    [userId]
+  );
+  return subscription.rows;
+}

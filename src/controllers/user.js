@@ -1,5 +1,4 @@
 import * as userService from '../services/user';
-import * as subscriptionService from '../services/subscription';
 
 export async function postNewUser(req, res) {
   const userInfo = req.body;
@@ -27,30 +26,4 @@ export async function login(req, res) {
   if (!session) return res.sendStatus(403);
 
   return res.send(session).status(200);
-}
-
-export async function getPlanFromUser(req, res) {
-  const auth = req.headers.authorization;
-
-  const isAuthValid = await userService.checkIsAuthValid(auth);
-  if (!isAuthValid) return res.sendStatus(401);
-
-  const token = auth.replace('Bearer ', '');
-
-  const isUserLoggedIn = await userService.checkUserLoggedIn(token);
-  if (!isUserLoggedIn) return res.sendStatus(401);
-
-  const userId = isUserLoggedIn.user_id;
-
-  const plan = await userService.getPlanFromUser(userId);
-
-  const choosenPlan = plan.plan;
-  const choosenDay = plan.day;
-
-  const nextDeliveries = await subscriptionService.getNextDeliveries({
-    choosenPlan,
-    choosenDay,
-  });
-
-  return res.send({ ...plan, nextDeliveries }).status(200);
 }

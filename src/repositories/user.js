@@ -63,6 +63,7 @@ export async function getPlanFromUser(userId) {
       subscriptions.id,
       subscriptions.user_id,
       subscription_date,
+      delivery_days.week_day,
       delivery_days.day,
       plans.name AS "plan",
       array_agg(products.name) AS "products"
@@ -78,7 +79,7 @@ export async function getPlanFromUser(userId) {
       ON products.id=product_id
     WHERE
       user_id = $1
-    GROUP BY 1,4,5;
+    GROUP BY 1,4,5,6;
     `,
     [userId]
   );

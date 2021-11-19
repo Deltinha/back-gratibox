@@ -11,11 +11,11 @@ app.use(express.json());
 
 app.get('/health', (req, res) => res.sendStatus(200));
 
-app.get('/user', userController.getPlanFromUser);
-
 app.post('/register', userController.postNewUser);
 
 app.post('/login', userController.login);
+
+app.get('/user', subscriptionController.getPlanFromUser);
 
 app.get('/plans', subscriptionController.getPlans);
 
