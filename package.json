@@ -6,9 +6,9 @@
   "main": "src/server.js",
   "scripts": {
     "start": "node --experimental-modules --es-module-specifier-resolution=node src/server.js",
-    "test": "NODE_ENV=test npx jest --passWithNoTests --noStackTrace --runInBand --silent",
-    "test:verbose": "NODE_ENV=test npx jest --passWithNoTests --noStackTrace --runInBand --verbose",
-    "test:watch": "NODE_ENV=test npx jest --passWithNoTests --noStackTrace --runInBand --watch",
+    "test": "NODE_ENV=test npx jest --runInBand --silent",
+    "test:verbose": "NODE_ENV=test npx jest --runInBand --verbose",
+    "test:watch": "NODE_ENV=test npx jest --runInBand --watch",
     "dev": "NODE_ENV=dev nodemon --experimental-modules --es-module-specifier-resolution=node src/server.js"
   },
   "repository": {
@@ -35,6 +35,7 @@
     "eslint-config-prettier": "8.3.0",
     "eslint-plugin-import": "^2.25.3",
     "eslint-plugin-jest": "^25.2.4",
+    "faker": "^5.5.3",
     "husky": "^7.0.4",
     "jest": "^27.3.1",
     "nodemon": "^2.0.15",
