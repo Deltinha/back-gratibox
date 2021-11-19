@@ -76,5 +76,19 @@ export async function getNextDeliveries({ choosenPlan, choosenDay }) {
       }
     }
   }
+  if (choosenPlan === 'semanal') {
+    for (let i = 0; i <= 2; i += 1) {
+      if (dayjs().add(i, 'week') <= dayjs().day(choosenDay).add(i, 'week')) {
+        nextDate = dayjs().day(choosenDay).add(i, 'week');
+        nextDeliveries.push(nextDate);
+      }
+      if (dayjs().add(i, 'week') > dayjs().day(choosenDay).add(i, 'week')) {
+        nextDate = dayjs()
+          .day(choosenDay)
+          .add(i + 1, 'week');
+        nextDeliveries.push(nextDate);
+      }
+    }
+  }
   return nextDeliveries;
 }
