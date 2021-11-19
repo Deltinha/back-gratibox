@@ -6,12 +6,6 @@ export async function getPlans(req, res) {
   return res.send(plans).status(200);
 }
 
-export async function getDaysFromPlan(req, res) {
-  const { planId } = req.params;
-  const days = await subscriptionService.getDaysFromPlan(planId);
-  return res.send(days).status(200);
-}
-
 export async function getProducts(req, res) {
   const products = await subscriptionService.getProducts();
   return res.send(products).status(200);
@@ -41,6 +35,41 @@ export async function postSubscription(req, res) {
 
   const userId = isUserLoggedIn.user_id;
 
-  await subscriptionService.insertSubscription({ body, userId });
+  await subscriptionService.insertSubscription({ ...body, userId });
   return res.sendStatus(200);
+}
+
+export async function getPlanFromUser(req, res) {
+  const auth = req.headers.authorization;
+
+  const isAuthValid = await userService.checkIsAuthValid(auth);
+  if (!isAuthValid) return res.sendStatus(401);
+
+  const token = auth.replace('Bearer ', '');
+
+  const isUserLoggedIn = await userService.checkUserLoggedIn(token);
+  if (!isUserLoggedIn) return res.sendStatus(401);
+
+  const userId = isUserLoggedIn.user_id;
+
+  const isUserSubscribed = await subscriptionService.isUserSubscribed(userId);
+  if (!isUserSubscribed) return res.sendStatus(204);
+
+  const plan = await userService.getPlanFromUser(userId);
+
+  const choosenPlan = plan.plan;
+  let choosenDay;
+  if (plan.week_day) {
+    choosenDay = plan.week_day;
+  }
+  if (plan.day) {
+    choosenDay = plan.day;
+  }
+
+  const nextDeliveries = await subscriptionService.getNextDeliveries({
+    choosenPlan,
+    choosenDay,
+  });
+
+  return res.send({ ...plan, nextDeliveries }).status(200);
 }

@@ -55,3 +55,33 @@ export async function createSession(session) {
     [userId, token]
   );
 }
+
+export async function getPlanFromUser(userId) {
+  const plan = await connection.query(
+    `
+    SELECT
+      subscriptions.id,
+      subscriptions.user_id,
+      subscription_date,
+      delivery_days.week_day,
+      delivery_days.day,
+      plans.name AS "plan",
+      array_agg(products.name) AS "products"
+    FROM
+      subscriptions
+    JOIN delivery_days
+      ON delivery_day_id=delivery_days.id
+    JOIN plans
+      ON plans.id=plan_id
+    JOIN products_subscriptions
+      ON subscriptions.id=products_subscriptions.subscription_id
+    JOIN products
+      ON products.id=product_id
+    WHERE
+      user_id = $1
+    GROUP BY 1,4,5,6;
+    `,
+    [userId]
+  );
+  return plan.rows[0];
+}

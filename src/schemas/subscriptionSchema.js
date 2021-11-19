@@ -8,6 +8,7 @@ export default function validateSubscriptionSyntax(obj) {
     cep: Joi.string().length(8).required(),
     city: Joi.string().min(3).required(),
     stateId: Joi.number().required(),
+    productsIds: Joi.array().items(Joi.number()).required(),
   });
 
   const validation = schema.validate(obj);

@@ -15,9 +15,9 @@ app.post('/register', userController.postNewUser);
 
 app.post('/login', userController.login);
 
-app.get('/plans', subscriptionController.getPlans);
+app.get('/user', subscriptionController.getPlanFromUser);
 
-app.get('/plans/:planId', subscriptionController.getDaysFromPlan);
+app.get('/plans', subscriptionController.getPlans);
 
 app.get('/products', subscriptionController.getProducts);
 
