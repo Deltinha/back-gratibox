@@ -26,7 +26,7 @@ CREATE TABLE "addresses" (
 
 CREATE TABLE "subscriptions" (
 	"id" serial NOT NULL,
-	"user_id" integer NOT NULL,
+	"user_id" integer NOT NULL UNIQUE,
 	"subscription_date" TIMESTAMP NOT NULL DEFAULT 'now()',
 	"address_id" integer NOT NULL,
 	"delivery_day_id" integer NOT NULL,
