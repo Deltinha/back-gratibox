@@ -11,7 +11,8 @@
   },
   "rules": {
     "no-console": "off",
-    "import/extensions": ["error", { "js": "ignorePackages" }]
+    "import/extensions": ["error", { "js": "ignorePackages" }],
+    "no-param-reassign": ["error", { "props": false }]
   },
   "plugins": ["jest"]
 }

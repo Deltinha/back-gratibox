@@ -19,8 +19,6 @@ app.get('/user', subscriptionController.getPlanFromUser);
 
 app.get('/plans', subscriptionController.getPlans);
 
-app.get('/plans/:planId', subscriptionController.getDaysFromPlan);
-
 app.get('/products', subscriptionController.getProducts);
 
 app.get('/states', subscriptionController.getStates);

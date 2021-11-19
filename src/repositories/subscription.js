@@ -2,17 +2,16 @@ import connection from '../database/database';
 
 export async function getPlans() {
   const plans = await connection.query(`
-      SELECT * FROM plans;
+      SELECT * FROM plans ORDER BY 1;
     `);
   return plans.rows;
 }
 
-export async function getDaysFromPlan(planId) {
+export async function getDays() {
   const days = await connection.query(
     `
-      SELECT * FROM delivery_days where plan_id = $1;
-    `,
-    [planId]
+      SELECT * FROM delivery_days ORDER BY 1;
+    `
   );
   return days.rows;
 }

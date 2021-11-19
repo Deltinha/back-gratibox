@@ -4,12 +4,21 @@ import validateSubscriptionSyntax from '../schemas/subscriptionSchema';
 
 export async function getPlans() {
   const plans = await subscriptionRepository.getPlans();
-  return plans;
-}
+  const days = await subscriptionRepository.getDays();
 
-export async function getDaysFromPlan(planId) {
-  const days = await subscriptionRepository.getDaysFromPlan(planId);
-  return days;
+  plans.forEach((plan) => {
+    plan.days = [];
+    for (let i = 0; i < days.length; i += 1) {
+      if (days[i].plan_id === plan.id) {
+        plan.days.push({
+          deliveryDayId: days[i].id,
+          day: days[i].day,
+          weekDay: days[i].week_day,
+        });
+      }
+    }
+  });
+  return plans;
 }
 
 export async function getProducts() {
