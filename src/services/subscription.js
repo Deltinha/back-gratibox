@@ -21,18 +21,23 @@ export async function getStates() {
   return states;
 }
 
-export async function insertSubscription({ body, userId }) {
-  await subscriptionRepository.insertSubscription({ body, userId });
+export async function insertSubscription(body) {
+  await subscriptionRepository.insertSubscription(body);
 }
 
 export async function isSubscriptionValid(body) {
   const isSyntaxValid = validateSubscriptionSyntax(body);
   if (!isSyntaxValid) return false;
 
-  const { deliveryDayId: dayId } = body;
+  const { deliveryDayId: dayId, productsIds } = body;
 
   const deliveryDay = await subscriptionRepository.getDayFromId(dayId);
   if (deliveryDay.length === 0) return false;
+
+  const products = await subscriptionRepository.getProductsByMultipleIds(
+    productsIds
+  );
+  if (products.length !== productsIds.length) return false;
 
   return true;
 }

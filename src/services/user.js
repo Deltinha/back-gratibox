@@ -63,3 +63,8 @@ export async function login(loginInfo) {
   await userRepository.createSession(body);
   return body;
 }
+
+export async function getPlanFromUser(userId) {
+  const plan = await userRepository.getPlanFromUser(userId);
+  return plan;
+}

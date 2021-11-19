@@ -27,3 +27,21 @@ export async function login(req, res) {
 
   return res.send(session).status(200);
 }
+
+export async function getPlanFromUser(req, res) {
+  const auth = req.headers.authorization;
+
+  const isAuthValid = await userService.checkIsAuthValid(auth);
+  if (!isAuthValid) return res.sendStatus(401);
+
+  const token = auth.replace('Bearer ', '');
+
+  const isUserLoggedIn = await userService.checkUserLoggedIn(token);
+  if (!isUserLoggedIn) return res.sendStatus(401);
+
+  const userId = isUserLoggedIn.user_id;
+
+  const plan = await userService.getPlanFromUser(userId);
+
+  return res.send(plan).status(200);
+}

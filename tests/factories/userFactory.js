@@ -16,7 +16,5 @@ export default async function createUser() {
     [user.name, user.email, user.hashedPassword]
   );
 
-  Object.assign(user, { id: insertedUser.rows[0].id });
-
-  return user;
+  return { ...user, id: insertedUser.rows[0].id };
 }

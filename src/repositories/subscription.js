@@ -28,6 +28,23 @@ export async function getDayFromId(dayId) {
   return days.rows;
 }
 
+export async function getProductsByMultipleIds(productsIds) {
+  let searchQuery = `
+  SELECT * FROM products
+    WHERE
+  `;
+  const paramArray = [];
+
+  productsIds.forEach((productId, index) => {
+    searchQuery += ` id=$${index + 1} OR`;
+    paramArray.push(productId);
+  });
+
+  searchQuery = searchQuery.slice(0, -2);
+  const products = await connection.query(searchQuery, paramArray);
+  return products.rows;
+}
+
 export async function getProducts() {
   const products = await connection.query(`
       SELECT * FROM products;
@@ -42,8 +59,32 @@ export async function getStates() {
   return states.rows;
 }
 
-export async function insertSubscription({ body, userId }) {
-  const { deliveryDayId, address, recipient, cep, city, stateId } = body;
+async function insertProductsSubscriptions({ productsIds, subscriptionId }) {
+  let insertQuery = `
+  INSERT INTO products_subscriptions
+    (product_id, subscription_id)
+  VALUES
+  `;
+
+  productsIds.forEach((productId) => {
+    insertQuery += `(${productId}, ${subscriptionId}),`;
+  });
+
+  insertQuery = insertQuery.slice(0, -1);
+  await connection.query(insertQuery);
+}
+
+export async function insertSubscription(body) {
+  const {
+    deliveryDayId,
+    address,
+    recipient,
+    cep,
+    city,
+    stateId,
+    userId,
+    productsIds,
+  } = body;
   const addressId = await connection.query(
     `
     INSERT INTO addresses (
@@ -59,10 +100,21 @@ export async function insertSubscription({ body, userId }) {
     [address, recipient, cep, city, stateId]
   );
 
-  await connection.query(
+  const subscription = await connection.query(
     `
-    INSERT INTO SUBSCRIPTIONS (user_id, address_id, delivery_day_id) VALUES ($1, $2, $3);
+    INSERT INTO subscriptions (
+      user_id,
+      address_id,
+      delivery_day_id
+    )
+    VALUES ($1, $2, $3)
+    RETURNING *;
     `,
     [userId, addressId.rows[0].id, deliveryDayId]
   );
+
+  insertProductsSubscriptions({
+    productsIds,
+    subscriptionId: subscription.rows[0].id,
+  });
 }

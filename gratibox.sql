@@ -48,9 +48,10 @@ CREATE TABLE "products" (
 
 
 CREATE TABLE "products_subscriptions" (
-	"id" integer NOT NULL,
+	"id" serial NOT NULL,
 	"product_id" integer NOT NULL,
-	"subscription_id" integer NOT NULL
+	"subscription_id" integer NOT NULL,
+	CONSTRAINT "products_subscriptions_pk" PRIMARY KEY ("id")
 ) WITH (
   OIDS=FALSE
 );

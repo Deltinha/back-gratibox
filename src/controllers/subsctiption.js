@@ -41,6 +41,6 @@ export async function postSubscription(req, res) {
 
   const userId = isUserLoggedIn.user_id;
 
-  await subscriptionService.insertSubscription({ body, userId });
+  await subscriptionService.insertSubscription({ ...body, userId });
   return res.sendStatus(200);
 }
