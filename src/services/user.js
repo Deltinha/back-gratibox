@@ -54,7 +54,6 @@ function generateToken() {
 export async function login(loginInfo) {
   const { email, password } = loginInfo;
   const userInfo = await userRepository.getUserByEmail(email);
-  if (userInfo.length === 0) return false;
 
   const passwordMatch = checkPasswordMatch(password, userInfo[0].password);
   if (!passwordMatch) return false;

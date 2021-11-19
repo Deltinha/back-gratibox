@@ -19,8 +19,11 @@ export async function login(req, res) {
   const isSyntaxValid = userService.checkLoginSyntax(loginInfo);
   if (!isSyntaxValid) return res.sendStatus(400);
 
+  const userExists = await userService.checkEmailExists(loginInfo.email);
+  if (!userExists) return res.sendStatus(403);
+
   const session = await userService.login(loginInfo);
-  if (!session) return res.sendStatus(401);
+  if (!session) return res.sendStatus(403);
 
   return res.send(session).status(200);
 }

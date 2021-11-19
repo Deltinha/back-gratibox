@@ -2,7 +2,7 @@ import faker from 'faker';
 import bcrypt from 'bcrypt';
 import connection from '../../src/database/database';
 
-export async function createUser() {
+export default async function createUser() {
   const password = faker.internet.password();
   const user = {
     name: faker.name.findName(),
@@ -19,12 +19,4 @@ export async function createUser() {
   Object.assign(user, { id: insertedUser.rows[0].id });
 
   return user;
-}
-
-export function createCredentials() {
-  return {
-    name: faker.name.findName(),
-    email: faker.internet.email(),
-    password: faker.internet.password(),
-  };
 }
