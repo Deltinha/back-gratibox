@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import bcrypt from 'bcrypt';
 import { v4 as uuid } from 'uuid';
 import * as userRepository from '../repositories/user';
@@ -24,8 +23,8 @@ function hashPassword(password) {
 
 export async function checkEmailExists(email) {
   const user = await userRepository.getUserByEmail(email);
-  if (user !== 0) return true;
-  return false;
+  if (user.length === 0) return false;
+  return true;
 }
 
 export function checkNewUserSyntax(userInfo) {
