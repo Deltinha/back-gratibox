@@ -23,7 +23,7 @@ app.get('/products', subscriptionController.getProducts);
 
 app.get('/states', subscriptionController.getStates);
 
-app.post('/subscriptions', subscriptionController.postSubscription);
+app.post('/subscription', subscriptionController.postSubscription);
 
 // eslint-disable-next-line no-unused-vars
 app.use((error, request, response, next) => {

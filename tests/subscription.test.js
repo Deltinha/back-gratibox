@@ -1,6 +1,7 @@
 import '../src/setup';
 import supertest from 'supertest';
 import { v4 as uuid } from 'uuid';
+import faker from 'faker';
 import app from '../src/app';
 import connection from '../src/database/database';
 import createUser from './factories/userFactory';
@@ -12,6 +13,7 @@ import createAddress from './factories/addressFactory';
 import createPlan from './factories/planFactory';
 import { createSubscription } from './factories/subscriptionFactory';
 import { userSubscriptionSchema } from './schemas/userSubscriptionSchema';
+import createProduct from './factories/productsFactory';
 
 async function clearDatabase() {
   await connection.query('DELETE FROM sessions;');
@@ -58,7 +60,6 @@ describe('Create subscription test suit', () => {
 });
 
 describe('GET /user plan test suit', () => {
-  beforeAll(async () => {});
   afterAll(async () => {
     await clearDatabase();
   });
@@ -77,28 +78,24 @@ describe('GET /user plan test suit', () => {
 
     const token = await createSession(user.id);
 
-    let result = await supertest(app)
+    let result = await agent
       .get('/user')
       .set('Authorization', `Bearer token123`);
     expect(result.status).toEqual(401);
 
-    result = await supertest(app).get('/user').set('Authorization', `${token}`);
+    result = await agent.get('/user').set('Authorization', `${token}`);
     expect(result.status).toEqual(401);
 
-    result = await supertest(app)
-      .get('/user')
-      .set('Authorization', `Random ${token}`);
+    result = await agent.get('/user').set('Authorization', `Random ${token}`);
     expect(result.status).toEqual(401);
 
-    result = await supertest(app)
-      .get('/user')
-      .set('Authorization', `${uuid()}`);
+    result = await agent.get('/user').set('Authorization', `${uuid()}`);
     expect(result.status).toEqual(401);
   });
   it('returns 401 if user is unlogged', async () => {
     await createUser();
 
-    const result = await supertest(app)
+    const result = await agent
       .get('/user')
       .set('Authorization', `Bearer ${uuid()}`);
     expect(result.status).toEqual(401);
@@ -108,11 +105,50 @@ describe('GET /user plan test suit', () => {
     const token = await createSession(user.id);
     await createSubscription(user.id);
 
-    const result = await supertest(app)
+    const result = await agent
       .get('/user')
       .set('Authorization', `Bearer ${token}`);
     expect(result.status).toEqual(200);
     expect(result.body).toEqual(userSubscriptionSchema);
+  });
+});
+
+describe('POST /subscription test suit', () => {
+  afterAll(async () => {
+    await clearDatabase();
+  });
+
+  it('returns 201 for post on /subscription', async () => {
+    const user = await createUser();
+    const token = await createSession(user.id);
+    const deliveryDayId = await createPlan();
+    const state = await connection.query(
+      `
+      INSERT INTO states
+        (name)
+      VALUES
+        ('PI')
+      RETURNING *;
+      `
+    );
+    const stateId = state.rows[0].id;
+    const productsIds = [await createProduct(), await createProduct()];
+
+    const body = {
+      deliveryDayId,
+      address: faker.address.streetName(),
+      recipient: faker.name.findName(),
+      cep: '64000000',
+      city: faker.address.cityName(),
+      stateId,
+      productsIds,
+    };
+
+    const subscription = await agent
+      .post('/subscription')
+      .set('Authorization', `Bearer ${token}`)
+      .send(body);
+    expect(subscription.status).toEqual(201);
   });
 });
 
