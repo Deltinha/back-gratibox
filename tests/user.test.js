@@ -67,6 +67,7 @@ describe('POST /login', () => {
       expect.objectContaining({
         userId: expect.any(Number),
         token: expect.any(String),
+        name: expect.any(String),
       })
     );
   });
