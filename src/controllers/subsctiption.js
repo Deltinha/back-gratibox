@@ -70,5 +70,16 @@ export async function getPlanFromUser(req, res) {
     choosenDay,
   });
 
-  return res.send({ ...plan, nextDeliveries }).status(200);
+  return res
+    .send({
+      id: plan.id,
+      userId: plan.user_id,
+      subscriptionDate: plan.subscription_date,
+      weekDay: plan.week_day,
+      day: plan.day,
+      plan: plan.plan,
+      products: plan.products,
+      nextDeliveries,
+    })
+    .status(200);
 }
