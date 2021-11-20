@@ -25,5 +25,5 @@ export async function login(req, res) {
   const session = await userService.login(loginInfo);
   if (!session) return res.sendStatus(403);
 
-  return res.send(session).status(200);
+  return res.send({ ...session, name: userExists.name }).status(200);
 }

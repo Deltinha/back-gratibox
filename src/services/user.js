@@ -24,7 +24,7 @@ function hashPassword(password) {
 export async function checkEmailExists(email) {
   const user = await userRepository.getUserByEmail(email);
   if (user.length === 0) return false;
-  return true;
+  return user[0];
 }
 
 export function checkNewUserSyntax(userInfo) {
