@@ -1,9 +1,12 @@
 import connection from '../../src/database/database';
-import faker from 'faker';
 import createAddress from './addressFactory';
+import createPlan from './planFactory';
+import createProduct from './productsFactory';
 
-export async function createSubscription(userId, deliveryDayId) {
-  const addressId = createAddress();
+export async function createSubscription(userId) {
+  const addressId = await createAddress();
+  const deliveryDayId = await createPlan();
+  const productId = await createProduct();
 
   const subscription = await connection.query(
     `
@@ -15,11 +18,16 @@ export async function createSubscription(userId, deliveryDayId) {
     VALUES ($1, $2, $3)
     RETURNING *;
     `,
-    [userId, addressId.rows[0].id, deliveryDayId]
+    [userId, addressId, deliveryDayId]
   );
 
-  insertProductsSubscriptions({
-    productsIds,
-    subscriptionId: subscription.rows[0].id,
-  });
+  await connection.query(
+    `
+    INSERT INTO products_subscriptions
+      (product_id, subscription_id)
+    VALUES
+      ($1, $2)
+  ;`,
+    [productId, subscription.rows[0].id]
+  );
 }

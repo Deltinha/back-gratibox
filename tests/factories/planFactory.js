@@ -1,6 +1,6 @@
 import connection from '../../src/database/database';
 
-export default async function planFactory() {
+export default async function createPlan() {
   const plan = await connection.query(`
       INSERT INTO plans (name) VALUES ('mensal')
       RETURNING *;
