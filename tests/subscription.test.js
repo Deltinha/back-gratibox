@@ -80,13 +80,15 @@ describe('GET /user plan test suit', () => {
 
     let result = await agent
       .get('/user')
-      .set('Authorization', `Bearer token123`);
+      .set('Authorization', `Bearer not-a-token`);
     expect(result.status).toEqual(401);
 
     result = await agent.get('/user').set('Authorization', `${token}`);
     expect(result.status).toEqual(401);
 
-    result = await agent.get('/user').set('Authorization', `Random ${token}`);
+    result = await agent
+      .get('/user')
+      .set('Authorization', `not-bearer ${token}`);
     expect(result.status).toEqual(401);
 
     result = await agent.get('/user').set('Authorization', `${uuid()}`);
@@ -114,11 +116,11 @@ describe('GET /user plan test suit', () => {
 });
 
 describe('POST /subscription test suit', () => {
-  afterAll(async () => {
+  afterEach(async () => {
     await clearDatabase();
   });
 
-  it('returns 201 for post on /subscription', async () => {
+  it('returns 201 subscription created', async () => {
     const user = await createUser();
     const token = await createSession(user.id);
     const deliveryDayId = await createPlan();
@@ -149,6 +151,105 @@ describe('POST /subscription test suit', () => {
       .set('Authorization', `Bearer ${token}`)
       .send(body);
     expect(subscription.status).toEqual(201);
+  });
+
+  it('returns 401 if auth is invalid', async () => {
+    const user = await createUser();
+    const token = await createSession(user.id);
+    const deliveryDayId = await createPlan();
+    const state = await connection.query(
+      `
+      INSERT INTO states
+        (name)
+      VALUES
+        ('PI')
+      RETURNING *;
+      `
+    );
+    const stateId = state.rows[0].id;
+    const productsIds = [await createProduct(), await createProduct()];
+
+    const body = {
+      deliveryDayId,
+      address: faker.address.streetName(),
+      recipient: faker.name.findName(),
+      cep: '64000000',
+      city: faker.address.cityName(),
+      stateId,
+      productsIds,
+    };
+
+    let subscription = await agent
+      .post('/subscription')
+      .set('Authorization', `Bearer not-a-token`)
+      .send(body);
+    expect(subscription.status).toEqual(401);
+
+    subscription = await agent
+      .post('/subscription')
+      .set('Authorization', `Bearer ${uuid()}`)
+      .send(body);
+    expect(subscription.status).toEqual(401);
+
+    subscription = await agent
+      .post('/subscription')
+      .set('Authorization', `${token}`)
+      .send(body);
+    expect(subscription.status).toEqual(401);
+
+    subscription = await agent
+      .post('/subscription')
+      .set('Authorization', `not-bearer ${token}`)
+      .send(body);
+    expect(subscription.status).toEqual(401);
+  });
+
+  it('returns 400 if body is invalid', async () => {
+    const user = await createUser();
+    const token = await createSession(user.id);
+
+    const body = {
+      address: faker.address.streetName(),
+      recipient: faker.name.findName(),
+      city: faker.address.cityName(),
+    };
+
+    const subscription = await agent
+      .post('/subscription')
+      .set('Authorization', `Bearer ${token}`)
+      .send(body);
+    expect(subscription.status).toEqual(400);
+  });
+
+  it('returns 401 if user is unlogged', async () => {
+    const deliveryDayId = await createPlan();
+    const state = await connection.query(
+      `
+      INSERT INTO states
+        (name)
+      VALUES
+        ('PI')
+      RETURNING *;
+      `
+    );
+    const stateId = state.rows[0].id;
+    const productsIds = [await createProduct(), await createProduct()];
+
+    const body = {
+      deliveryDayId,
+      address: faker.address.streetName(),
+      recipient: faker.name.findName(),
+      cep: '64000000',
+      city: faker.address.cityName(),
+      stateId,
+      productsIds,
+    };
+
+    const subscription = await agent
+      .post('/subscription')
+      .set('Authorization', `Bearer ${uuid()}`)
+      .send(body);
+    expect(subscription.status).toEqual(401);
   });
 });
 
