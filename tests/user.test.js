@@ -21,13 +21,13 @@ describe('POST /register', () => {
     expect(result.status).toEqual(201);
   });
 
-  it('returns 403 when email is already taken', async () => {
+  it('returns 409 when email is already taken', async () => {
     const user = await createUser();
 
     const result = await agent
       .post('/register')
       .send({ name: user.name, email: user.email, password: user.password });
-    expect(result.status).toEqual(403);
+    expect(result.status).toEqual(409);
   });
 
   it('returns 400 for invalid credentials', async () => {

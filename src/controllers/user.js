@@ -4,7 +4,7 @@ export async function postNewUser(req, res) {
   const userInfo = req.body;
 
   const isEmailTaken = await userService.checkEmailExists(userInfo.email);
-  if (isEmailTaken) return res.sendStatus(403);
+  if (isEmailTaken) return res.sendStatus(409);
 
   const isSyntaxValid = userService.checkNewUserSyntax(userInfo);
   if (!isSyntaxValid) return res.sendStatus(400);
