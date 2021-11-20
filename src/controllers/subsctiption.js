@@ -19,7 +19,6 @@ export async function getStates(req, res) {
 export async function postSubscription(req, res) {
   const auth = req.headers.authorization;
   const { body } = req;
-
   const isAuthValid = await userService.checkIsAuthValid(auth);
   if (!isAuthValid) return res.sendStatus(401);
 
@@ -36,7 +35,7 @@ export async function postSubscription(req, res) {
   const userId = isUserLoggedIn.user_id;
 
   await subscriptionService.insertSubscription({ ...body, userId });
-  return res.sendStatus(200);
+  return res.sendStatus(201);
 }
 
 export async function getPlanFromUser(req, res) {

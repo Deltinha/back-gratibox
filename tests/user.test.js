@@ -100,7 +100,5 @@ describe('POST /login', () => {
 });
 
 afterAll(async () => {
-  await connection.query('DELETE FROM sessions;');
-  await connection.query('DELETE FROM users;');
   connection.end();
 });
