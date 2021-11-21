@@ -19,13 +19,9 @@ export async function getStates(req, res) {
 export async function postSubscription(req, res) {
   const auth = req.headers.authorization;
   const { body } = req;
+
   const isAuthValid = await userService.checkIsAuthValid(auth);
   if (!isAuthValid) return res.sendStatus(401);
-
-  const isSubscriptionValid = await subscriptionService.isSubscriptionValid(
-    body
-  );
-  if (!isSubscriptionValid) return res.sendStatus(400);
 
   const token = auth.replace('Bearer ', '');
 
@@ -33,6 +29,14 @@ export async function postSubscription(req, res) {
   if (!isUserLoggedIn) return res.sendStatus(401);
 
   const userId = isUserLoggedIn.user_id;
+
+  const isUserSubscribed = await subscriptionService.isUserSubscribed(userId);
+  if (isUserSubscribed) return res.sendStatus(403);
+
+  const isSubscriptionValid = await subscriptionService.isSubscriptionValid(
+    body
+  );
+  if (!isSubscriptionValid) return res.sendStatus(400);
 
   await subscriptionService.insertSubscription({ ...body, userId });
   return res.sendStatus(201);

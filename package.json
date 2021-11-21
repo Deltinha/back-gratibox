@@ -5,7 +5,9 @@
   "description": "box delivery app",
   "main": "src/server.js",
   "jest": {
-  "setupFilesAfterEnv": ["jest-extended/all"]
+    "setupFilesAfterEnv": [
+      "jest-extended/all"
+    ]
   },
   "scripts": {
     "start": "node --experimental-modules --es-module-specifier-resolution=node src/server.js",

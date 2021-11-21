@@ -28,7 +28,7 @@ async function clearDatabase() {
 
 const agent = supertest(app);
 
-describe('Create subscription test suit', () => {
+describe('GET options', () => {
   beforeEach(async () => {
     await createPlan();
     await createAddress();
@@ -102,7 +102,7 @@ describe('GET /user plan test suit', () => {
       .set('Authorization', `Bearer ${uuid()}`);
     expect(result.status).toEqual(401);
   });
-  it('returns 200 for get on /plans', async () => {
+  it('returns 200 is user is subscribed', async () => {
     const user = await createUser();
     const token = await createSession(user.id);
     await createSubscription(user.id);
@@ -250,6 +250,45 @@ describe('POST /subscription test suit', () => {
       .set('Authorization', `Bearer ${uuid()}`)
       .send(body);
     expect(subscription.status).toEqual(401);
+  });
+
+  it('returns 403 if user is already subscribed', async () => {
+    const user = await createUser();
+    const token = await createSession(user.id);
+
+    const deliveryDayId = await createPlan();
+    const state = await connection.query(
+      `
+      INSERT INTO states
+        (name)
+      VALUES
+        ('PI')
+      RETURNING *;
+      `
+    );
+    const stateId = state.rows[0].id;
+    const productsIds = [await createProduct(), await createProduct()];
+
+    const body = {
+      deliveryDayId,
+      address: faker.address.streetName(),
+      recipient: faker.name.findName(),
+      cep: '64000000',
+      city: faker.address.cityName(),
+      stateId,
+      productsIds,
+    };
+
+    await agent
+      .post('/subscription')
+      .set('Authorization', `Bearer ${token}`)
+      .send(body);
+
+    const subscription = await agent
+      .post('/subscription')
+      .set('Authorization', `Bearer ${token}`)
+      .send(body);
+    expect(subscription.status).toEqual(403);
   });
 });
 

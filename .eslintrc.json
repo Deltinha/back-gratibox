@@ -13,7 +13,8 @@
     "no-console": "off",
     "import/prefer-default-export": "off",
     "import/extensions": ["error", { "js": "ignorePackages" }],
-    "no-param-reassign": ["error", { "props": false }]
+    "no-param-reassign": ["error", { "props": false }],
+    "import/no-extraneous-dependencies": ["error", { "devDependencies": true }]
   },
   "plugins": ["jest"]
 }
