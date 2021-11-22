@@ -12,10 +12,18 @@ This is the backend repo for GratiBox. A service that delivers you boxes of medi
 
 - NodeJS
 - ExpressJS
+- nodemon
+- pg
 - dotenv
+- cors
 - Jest
+- supertest
 - bcrypt
 - uuid
+- joi
+- faker
+- prettier
+- husky
 
 ## Running locally
 
