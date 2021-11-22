@@ -4,6 +4,10 @@
 
 This is the backend repo for GratiBox. A service that delivers you boxes of meditation goodies.
 
+### Check out the front-end repo of this app.
+
+[https://github.com/Deltinha/front-gratibox.git](https://github.com/Deltinha/front-gratibox.git)
+
 ## Technologies
 
 - NodeJS
@@ -37,11 +41,7 @@ npm install
 npm run dev
 ```
 
-### Check out the front-end repo of this app.
-
-[https://github.com/Deltinha/front-gratibox.git](https://github.com/Deltinha/front-gratibox.git)
-
-## Info
+## Info (incomplete)
 
 `GET` /plans
 
