@@ -27,7 +27,7 @@ git clone https://github.com/Deltinha/back-gratibox.git
 npm install
 ```
 
-4. Create a local following `./gratibox.sql`
+4. Create a local database following `./gratibox.sql`
 
 5. Create a new file called `.env.dev` in the root folder using `.env-example` as template. Feed the newly created file with the info of your database.
 
