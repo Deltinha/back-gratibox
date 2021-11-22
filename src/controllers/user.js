@@ -25,5 +25,7 @@ export async function login(req, res) {
   const session = await userService.login(loginInfo);
   if (!session) return res.sendStatus(403);
 
-  return res.send({ ...session, name: userExists.name }).status(200);
+  const isUserSubscribed = await userService.getPlanFromUser(session.userId)
+
+  return res.send({ ...session, name: userExists.name, isSubscribed: !!isUserSubscribed }).status(200);
 }

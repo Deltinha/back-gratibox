@@ -68,6 +68,7 @@ describe('POST /login', () => {
         userId: expect.any(Number),
         token: expect.any(String),
         name: expect.any(String),
+        isSubscribed: expect.any(Boolean),
       })
     );
   });
