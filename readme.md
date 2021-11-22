@@ -4,7 +4,7 @@
 
 This is the backend repo for GratiBox. A service that delivers you boxes of meditation goodies.
 
-### Check out the front-end repo of this app.
+### Check out the front-end repo of the app.
 
 [https://github.com/Deltinha/front-gratibox.git](https://github.com/Deltinha/front-gratibox.git)
 
