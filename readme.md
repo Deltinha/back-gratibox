@@ -69,7 +69,7 @@ You can access an array containing ALL the plans and the available delivery days
         "weekDay": null
       }
     ]
-  },...
+  }
 ]
 ```
 
