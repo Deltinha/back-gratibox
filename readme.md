@@ -25,17 +25,17 @@ This is the backend repo for GratiBox. A service that delivers you boxes of medi
 git clone https://github.com/Deltinha/back-gratibox.git
 ```
 
-3. Install NPM packages for the back-end repo
+2. Install NPM packages for the back-end repo
 
 ```sh
 npm install
 ```
 
-4. Create a local database following `./gratibox.sql`
+3. Restore the database using the file `./dump.sql`
 
-5. Create a new file called `.env.dev` in the root folder using `.env-example` as template. Feed the newly created file with the info of your database.
+4. Create a new file called `.env` in the root folder using `.env-example` as template. Feed the newly created file with the info of your database.
 
-6. Run the app in development mode
+5. Run the app in development mode
 
 ```sh
 npm run dev
